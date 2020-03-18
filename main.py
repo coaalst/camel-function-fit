@@ -1,28 +1,33 @@
 import random
 import sys
 
+# Ocena gena se vrsi tako sto za svaki hromozom(najbolji) gledamo koliko je blizu dosao
+# ocekivanom rezultatu.
+# 5.3 Funkcija prilagodjenosti
+# Уколико је проблем оптимизације такав да је потребно оптимизовати реалну функцију више променљивих,
+# онда се она сама може искористити као функција прилагођености. У том случају заобилази се и корак
+# моделовања функције прилагођености, док се њени параметри директно преписују у хромозом. На тај
+# начин употреба генетског алгоритма за оптимизацију вишедимензионалне реалне функције
+# постаје значајно олакшана.
+def oceni(hromozom):
 
-def predvidi(hromozom, x):
-      return hromozom[0] ** x + hromozom[1]
+    # Iz hromozoma vadimo kordinate
+    x = hromozom[0]
+    y = hromozom[1]
 
-# Ocena gena
-def trosak(hromozom):
-  greska = 0
-  for x, y in enumerate(podaci, 1):
-    predvidjanje = predvidi(hromozom, x)
-    greska += (predvidjanje - y[1]) ** 2
-  return greska / len(podaci)
+    # Ocekivani minimum je f(0,0) = 0
+    return 2 * pow(x, 2) - 1.05 * pow(x, 4) + (pow(x, 6) / 6) + x * y + y * y
 
 # Funckija za mutiranje - Tackasta normalna mutacija za kontinualni
 # genetrski algoritam (dodaje se slucajna vrednost na gen iz normalne raspodele).
+
+
 def mutiraj(hromozom, rate, opseg):
     if random.random() < rate:
-        for i in range(len(hromozom)):
-#            hromozom[i] = random.uniform(*opseg)
+        for i in range(2):
             hromozom[i] += random.gauss(0, 1)
     return hromozom
 
-#p = p + sigmaT(0,1)
 
 # turnirska selekcija - argumenti su funkcija troška, rešenje, populacija i veličina turnira
 def turnir(fja, pop, vel):
@@ -38,67 +43,97 @@ def turnir(fja, pop, vel):
             najbolji = e
     return najbolji
 
-def function_fit():
 
-    #Podesavanje populacije
+# Metoda ukrstanja - jednostavno ukrstanje REDKLIF
+# Редклиф је у свом раду предложио једноставан облик формуле за израчунавање вредности једног
+# параметра потомка из вредности истог параметра његова два родитеља [19]:
+# 𝑝pot=𝛽𝑝1+(1−𝛽)𝑝2
+# У овој формули 𝑝pot представља параметар потомка, 𝑝1 i 𝑝2 су параметри првог и другог родитеља
+# респективно, а 𝛽∈[0,1] је случајни број којим се одређује удео вредности параметра првог и
+# другог родитеља у вредности параметра добијеног потомка. Када је 𝛽=0, вредност параметра се
+# преписује од другог родитеља; када је 𝛽=1, вредност се преписује из првог родитеља, а када је
+# 𝛽=0.5, вредност је аритметичка средина вредности параметра оба родитеља.
+def ukrsti(hromo_1, hromo_2):
+    beta_fact = random.gauss(0, 1)
+    hromo_chiled = hromo_1
+    for i in range(len(hromo_1)):
+        hromo_chiled[i] = beta_fact * hromo_1[i] + \
+            ((1 - beta_fact) * hromo_2[i])
+    return hromo_chiled
+
+# Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
+
+
+def function_fit(mut_rat):
+
+    # Podesavanje populacije
     pop_vel = 20
     npop_vel = 20
     max_iteracija = 500
-    mutacije = [0.05, 0.1, 0.2]
 
-    #interval funckije
+    # Interval funckije
     interval = [-5, 5]
-    
+
+    # Output
     outfile = sys.stdout
-    s_trosak = 0
+
+    # Podesavanje algoritma
+    s_oceni = 0
     s_iteracija = 0
     best_ever_sol = None
     best_ever_f = None
     test_vel = 2
-    # 5 pokretanja genetskog algoritma
-    for k in range(max_iteracija):
-        print('Algoritam pokrenut, iteracija: ' + k, ', mutacija: ' + mut_rat, file=outfile)
-        best = None
-        best_f = None
-        t = 0
 
-        # generisanje populacije pomoću zadatog intervala realnih vrednosti
+    # Pokrecemo 2 puta po mutaciji
+    for k in range(2):
+        print('Algoritam pokrenut, iteracija: ' + str(k),
+              ', mutacija: ' + str(mut_rat), file=outfile)
+        best = None
+
+        # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval) for i in range(test_vel)] for j in range(pop_vel)]
-        # ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
-        while best_f != 0 and t < max_iteracija:
+
+        best_result_fitment = None
+        t = 0
+        # Ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
+        while best_result_fitment != 0 and t < max_iteracija:
             n_pop = pop[:]
             while len(n_pop) < pop_vel + npop_vel:
-                h1 = turnir(trosak, pop, 3)
-                h2 = turnir(trosak, pop, 3)
+                h1 = turnir(oceni, pop, 3)
+                h2 = turnir(oceni, pop, 3)
                 h3, h4 = ukrsti(h1, h2)
-                mutiraj(h3, mut_rat, opseg)
-                mutiraj(h4, mut_rat, opseg)
+                mutiraj(h3, mut_rat, interval)
+                mutiraj(h4, mut_rat, interval)
                 n_pop.append(h3)
                 n_pop.append(h4)
-            pop = sorted(n_pop, key=lambda x : trosak(x))[:pop_vel]
-            f = trosak(pop[0])
-            if best_f is None or best_f > f:
-                best_f = f
+            pop = sorted(n_pop, key=lambda x: oceni(x))[:pop_vel]
+            f = oceni(pop[0])
+            if best_result_fitment is None or best_result_fitment > f:
+                best_result_fitment = f
                 best = pop[0]
-#                    print(t, best_f, file=outfile)
             t += 1
-        s_trosak += best_f
+
+        # Azuriraj global statistiku
+        s_oceni += best_result_fitment
         s_iteracija += t
-        # ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
-        if best_ever_f is None or best_ever_f > best_f:
-            best_ever_f = best_f
+
+        # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
+        if best_ever_f is None or best_ever_f > best_result_fitment:
+            best_ever_f = best_result_fitment
             best_ever_sol = best
-        print(t, best, best_f, file=outfile)
-#                print(t, best, best_f)
+        print(t, best, best_result_fitment, file=outfile)
+
     # na kraju svih izvršavanja izračunavamo srednji trošak i srednji broj iteracija
-    s_trosak /= 5
-    s_iteracija /= 5
-    print('Srednji trosak: %g' % s_trosak, file=outfile)
+    s_oceni /= 2
+    s_iteracija /= 2
+    print('Srednji oceni: %g' % s_oceni, file=outfile)
     print('Srednji broj iteracija: %.2f' % s_iteracija, file=outfile)
     print('Najbolje resenje: %s' % best_ever_sol, file=outfile)
-    print('Najbolji trosak: %g' % best_ever_f, file=outfile)
-    print('Procena sledećeg unosa: %d' % int(predvidi(best_ever_sol, len(podaci) + 1)))
+    print('Najbolji oceni: %g' % best_ever_f, file=outfile)
 
+
+mutacije = [0.05, 0.1, 0.2]
 
 for mut_rat in mutacije:
-    function_fit()
+    print('Aleksandar Stojanovic RN97/2018')
+    function_fit(mut_rat)
