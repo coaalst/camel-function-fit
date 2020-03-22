@@ -1,5 +1,6 @@
 import random
 import sys
+import numpy as np
 
 # Ocena gena se vrsi tako sto za svaki hromozom(najbolji) gledamo koliko je blizu dosao
 # ocekivanom rezultatu.
@@ -11,22 +12,28 @@ import sys
 # постаје значајно олакшана.
 def oceni(hromozom):
 
-    # Iz hromozoma vadimo kordinate
+    # Ocekivani minimum j\
+    print(hromozom)
     x = hromozom[0]
     y = hromozom[1]
-
-    # Ocekivani minimum je f(0,0) = 0
     return 2 * pow(x, 2) - 1.05 * pow(x, 4) + (pow(x, 6) / 6) + x * y + y * y
+
 
 # Funckija za mutiranje - Tackasta normalna mutacija za kontinualni
 # genetrski algoritam (dodaje se slucajna vrednost na gen iz normalne raspodele).
-
-
-def mutiraj(hromozom, rate, opseg):
+def mutiraj(hromo_1, hromo_2, rate, opseg ):
+    l = [[], []]
+    print('Mutiranje: ' + str(hromo_1[0]) + ',' + str(hromo_1[1]))
+    print(type(hromo_1[0]))
     if random.random() < rate:
-        for i in range(2):
-            hromozom[i] += random.gauss(0, 1)
-    return hromozom
+        rand = random.gauss(0,1)
+        i = random.randint(0,1)
+        #hromo_1[i] = float(hromo_1[i]) + rand
+        #hromo_2[i] = float(hromo_2[i]) + rand
+        l.append(hromo_1)
+        l.append(hromo_2)
+    return l
+
 
 
 # turnirska selekcija - argumenti su funkcija troška, rešenje, populacija i veličina turnira
@@ -54,16 +61,17 @@ def turnir(fja, pop, vel):
 # преписује од другог родитеља; када је 𝛽=1, вредност се преписује из првог родитеља, а када је
 # 𝛽=0.5, вредност је аритметичка средина вредности параметра оба родитеља.
 def ukrsti(hromo_1, hromo_2):
-    beta_fact = random.gauss(0, 1)
-    hromo_chiled = hromo_1
-    for i in range(len(hromo_1)):
-        hromo_chiled[i] = beta_fact * hromo_1[i] + \
-            ((1 - beta_fact) * hromo_2[i])
-    return hromo_chiled
+    beta_fact = []
+    beta_fact.append(random.gauss(0, 1))
+    beta_fact.append(random.gauss(0, 1))
+    l = [[], []]
+    for i in range(len(l)):
+        x = beta_fact[i] * hromo_1[0] + ((1 - beta_fact[i]) * hromo_2[0])
+        y = beta_fact[i] * hromo_1[1] + ((1 - beta_fact[i]) * hromo_2[1])
+        l[i] = [x, y] 
+    return l
 
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
-
-
 def function_fit(mut_rat):
 
     # Podesavanje populacije
@@ -92,6 +100,7 @@ def function_fit(mut_rat):
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval) for i in range(test_vel)] for j in range(pop_vel)]
+        # print('x =' + str(pop.pop()[0]) + ', y =' + str(pop.pop()[1]))
 
         best_result_fitment = None
         t = 0
@@ -102,10 +111,12 @@ def function_fit(mut_rat):
                 h1 = turnir(oceni, pop, 3)
                 h2 = turnir(oceni, pop, 3)
                 h3, h4 = ukrsti(h1, h2)
-                mutiraj(h3, mut_rat, interval)
-                mutiraj(h4, mut_rat, interval)
+                # print('glavni loop: ' + str(h3[0]) + ', ' + str(h3[1]))
+                h3, h4 = mutiraj(h3, h4, mut_rat, interval)
+
                 n_pop.append(h3)
                 n_pop.append(h4)
+
             pop = sorted(n_pop, key=lambda x: oceni(x))[:pop_vel]
             f = oceni(pop[0])
             if best_result_fitment is None or best_result_fitment > f:
@@ -123,7 +134,7 @@ def function_fit(mut_rat):
             best_ever_sol = best
         print(t, best, best_result_fitment, file=outfile)
 
-    # na kraju svih izvršavanja izračunavamo srednji trošak i srednji broj iteracija
+    # Na kraju svih izvršavanja izračunavamo srednji trošak i srednji broj iteracija
     s_oceni /= 2
     s_iteracija /= 2
     print('Srednji oceni: %g' % s_oceni, file=outfile)
@@ -134,6 +145,7 @@ def function_fit(mut_rat):
 
 mutacije = [0.05, 0.1, 0.2]
 
+print('Aleksandar Stojanovic RN97/2018')
 for mut_rat in mutacije:
-    print('Aleksandar Stojanovic RN97/2018')
+    print('+++++++++++++++++++++++++++++++++++++++')
     function_fit(mut_rat)
