@@ -13,27 +13,25 @@ import numpy as np
 def oceni(hromozom):
 
     # Ocekivani minimum j\
-    print(hromozom)
-    x = hromozom[0]
-    y = hromozom[1]
+    print('ocena: ' + str(hromozom[0]))
+    x = float(hromozom[0])
+    y = float(hromozom[1])
     return 2 * pow(x, 2) - 1.05 * pow(x, 4) + (pow(x, 6) / 6) + x * y + y * y
 
 
 # Funckija za mutiranje - Tackasta normalna mutacija za kontinualni
 # genetrski algoritam (dodaje se slucajna vrednost na gen iz normalne raspodele).
 def mutiraj(hromo_1, hromo_2, rate, opseg ):
-    l = [[], []]
-    print('Mutiranje: ' + str(hromo_1[0]) + ',' + str(hromo_1[1]))
-    print(type(hromo_1[0]))
     if random.random() < rate:
+        l = []
         rand = random.gauss(0,1)
         i = random.randint(0,1)
-        #hromo_1[i] = float(hromo_1[i]) + rand
-        #hromo_2[i] = float(hromo_2[i]) + rand
+        hromo_1[i] = float(hromo_1[i]) + rand
+        hromo_2[i] = float(hromo_2[i]) + rand
         l.append(hromo_1)
         l.append(hromo_2)
-    return l
-
+        return l
+    return hromo_1, hromo_2
 
 
 # turnirska selekcija - argumenti su funkcija troška, rešenje, populacija i veličina turnira
