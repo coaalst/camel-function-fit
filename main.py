@@ -1,5 +1,6 @@
 import random
 import sys
+from decimal import Decimal
 import numpy as np
 
 # Ocena gena se vrsi tako sto za svaki hromozom(najbolji) gledamo koliko je blizu dosao
@@ -12,8 +13,7 @@ import numpy as np
 # постаје значајно олакшана.
 def oceni(hromozom):
 
-    # Ocekivani minimum j\
-    print('ocena: ' + str(hromozom[0]))
+    # Ocekivani minimum f(0, 0) = 0
     x = float(hromozom[0])
     y = float(hromozom[1])
     return 2 * pow(x, 2) - 1.05 * pow(x, 4) + (pow(x, 6) / 6) + x * y + y * y
@@ -24,7 +24,7 @@ def oceni(hromozom):
 def mutiraj(hromo_1, hromo_2, rate, opseg ):
     if random.random() < rate:
         l = []
-        rand = random.gauss(0,1)
+        rand = round(random.gauss(0,1), 2)
         i = random.randint(0,1)
         hromo_1[i] = float(hromo_1[i]) + rand
         hromo_2[i] = float(hromo_2[i]) + rand
@@ -97,7 +97,7 @@ def function_fit(mut_rat):
         best = None
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
-        pop = [[random.uniform(*interval) for i in range(test_vel)] for j in range(pop_vel)]
+        pop = [[round(random.uniform(*interval),2) for i in range(test_vel)] for j in range(pop_vel)]
         # print('x =' + str(pop.pop()[0]) + ', y =' + str(pop.pop()[1]))
 
         best_result_fitment = None
@@ -109,7 +109,6 @@ def function_fit(mut_rat):
                 h1 = turnir(oceni, pop, 3)
                 h2 = turnir(oceni, pop, 3)
                 h3, h4 = ukrsti(h1, h2)
-                # print('glavni loop: ' + str(h3[0]) + ', ' + str(h3[1]))
                 h3, h4 = mutiraj(h3, h4, mut_rat, interval)
 
                 n_pop.append(h3)
@@ -120,6 +119,7 @@ def function_fit(mut_rat):
             if best_result_fitment is None or best_result_fitment > f:
                 best_result_fitment = f
                 best = pop[0]
+                print('Najbolji trenutni: ' + str(best))
             t += 1
 
         # Azuriraj global statistiku
@@ -130,20 +130,17 @@ def function_fit(mut_rat):
         if best_ever_f is None or best_ever_f > best_result_fitment:
             best_ever_f = best_result_fitment
             best_ever_sol = best
-        print(t, best, best_result_fitment, file=outfile)
+        print('Mutacija:', t, best, best_result_fitment, file=outfile)
 
-    # Na kraju svih izvršavanja izračunavamo srednji trošak i srednji broj iteracija
-    s_oceni /= 2
+    # Na kraju svih izvršavanja izračunavamo srednji broj iteracija
     s_iteracija /= 2
-    print('Srednji oceni: %g' % s_oceni, file=outfile)
+    k = 0
     print('Srednji broj iteracija: %.2f' % s_iteracija, file=outfile)
     print('Najbolje resenje: %s' % best_ever_sol, file=outfile)
-    print('Najbolji oceni: %g' % best_ever_f, file=outfile)
 
 
 mutacije = [0.05, 0.1, 0.2]
 
 print('Aleksandar Stojanovic RN97/2018')
 for mut_rat in mutacije:
-    print('+++++++++++++++++++++++++++++++++++++++')
     function_fit(mut_rat)
