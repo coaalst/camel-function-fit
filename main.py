@@ -11,6 +11,8 @@ import numpy as np
 # моделовања функције прилагођености, док се њени параметри директно преписују у хромозом. На тај
 # начин употреба генетског алгоритма за оптимизацију вишедимензионалне реалне функције
 # постаје значајно олакшана.
+
+
 def oceni(hromozom):
 
     # Ocekivani minimum f(0, 0) = 0
@@ -21,11 +23,11 @@ def oceni(hromozom):
 
 # Funckija za mutiranje - Tackasta normalna mutacija za kontinualni
 # genetrski algoritam (dodaje se slucajna vrednost na gen iz normalne raspodele).
-def mutiraj(hromo_1, hromo_2, rate, opseg ):
+def mutiraj(hromo_1, hromo_2, rate, opseg):
     if random.random() < rate:
         l = []
-        rand = round(random.gauss(0,1), 2)
-        i = random.randint(0,1)
+        rand = round(random.gauss(0, 1), 2)
+        i = random.randint(0, 1)
         hromo_1[i] = float(hromo_1[i]) + rand
         hromo_2[i] = float(hromo_2[i]) + rand
         l.append(hromo_1)
@@ -66,11 +68,17 @@ def ukrsti(hromo_1, hromo_2):
     for i in range(len(l)):
         x = beta_fact[i] * hromo_1[0] + ((1 - beta_fact[i]) * hromo_2[0])
         y = beta_fact[i] * hromo_1[1] + ((1 - beta_fact[i]) * hromo_2[1])
-        l[i] = [x, y] 
+        l[i] = [x, y]
     return l
 
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
+
+
 def function_fit(mut_rat):
+
+      # Output
+    outfile = sys.stdout
+    print('Algoritam pokrenut, iteracija: ' + ', mutacija: ' + str(mut_rat), file=outfile)
 
     # Podesavanje populacije
     pop_vel = 20
@@ -79,9 +87,6 @@ def function_fit(mut_rat):
 
     # Interval funckije
     interval = [-5, 5]
-
-    # Output
-    outfile = sys.stdout
 
     # Podesavanje algoritma
     s_oceni = 0
@@ -92,12 +97,11 @@ def function_fit(mut_rat):
 
     # Pokrecemo 2 puta po mutaciji
     for k in range(2):
-        print('Algoritam pokrenut, iteracija: ' + str(k),
-              ', mutacija: ' + str(mut_rat), file=outfile)
         best = None
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
-        pop = [[round(random.uniform(*interval),2) for i in range(test_vel)] for j in range(pop_vel)]
+        pop = [[round(random.uniform(*interval), 2)
+                for i in range(test_vel)] for j in range(pop_vel)]
         # print('x =' + str(pop.pop()[0]) + ', y =' + str(pop.pop()[1]))
 
         best_result_fitment = None
