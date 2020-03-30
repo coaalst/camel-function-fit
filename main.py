@@ -2,6 +2,8 @@ import random
 import sys
 from decimal import Decimal
 import numpy as np
+import configparser
+
 
 # Ocena gena se vrsi tako sto za svaki hromozom(najbolji) gledamo koliko je blizu dosao
 # ocekivanom rezultatu.
@@ -11,8 +13,6 @@ import numpy as np
 # моделовања функције прилагођености, док се њени параметри директно преписују у хромозом. На тај
 # начин употреба генетског алгоритма за оптимизацију вишедимензионалне реалне функције
 # постаје значајно олакшана.
-
-
 def oceni(hromozom):
 
     # Ocekivani minimum f(0, 0) = 0
@@ -23,8 +23,8 @@ def oceni(hromozom):
 
 # Funckija za mutiranje - Tackasta normalna mutacija za kontinualni
 # genetrski algoritam (dodaje se slucajna vrednost na gen iz normalne raspodele).
-def mutiraj(hromo_1, hromo_2, rate, opseg):
-    if random.random() < rate:
+def mutiraj(hromo_1, hromo_2, mutation_rate):
+    if(random.gauss(0,1) < mutation_rate):
         l = []
         rand = round(random.gauss(0, 1), 2)
         i = random.randint(0, 1)
@@ -74,35 +74,32 @@ def ukrsti(hromo_1, hromo_2):
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
 
 
-def function_fit(mut_rat):
-
-      # Output
-    outfile = sys.stdout
-    print('Algoritam pokrenut, iteracija: ' + ', mutacija: ' + str(mut_rat), file=outfile)
+def function_fit(velicina_populacije):
 
     # Podesavanje populacije
-    pop_vel = 20
-    npop_vel = 20
-    max_iteracija = 500
+    pop_vel = velicina_populacije
+    npop_vel = velicina_populacije
 
-    # Interval funckije
-    interval = [-5, 5]
-
-    # Podesavanje algoritma
     s_oceni = 0
     s_iteracija = 0
+
+    
     best_ever_sol = None
-    best_ever_f = None
-    test_vel = 2
+    best_ever_fitment = None
+    
+    
+    print('Algoritam pokrenut, iteracija: ' + ', Populacija: ' + str(velicina_populacije), file=outfile)
+
 
     # Pokrecemo 2 puta po mutaciji
     for k in range(2):
         best = None
 
+        print(str(interval) + str(test_vel) + str(pop_vel))
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
-        pop = [[round(random.uniform(*interval), 2)
+        pop = [[random.uniform(*interval)
                 for i in range(test_vel)] for j in range(pop_vel)]
-        # print('x =' + str(pop.pop()[0]) + ', y =' + str(pop.pop()[1]))
+        print(pop)
 
         best_result_fitment = None
         t = 0
@@ -113,7 +110,7 @@ def function_fit(mut_rat):
                 h1 = turnir(oceni, pop, 3)
                 h2 = turnir(oceni, pop, 3)
                 h3, h4 = ukrsti(h1, h2)
-                h3, h4 = mutiraj(h3, h4, mut_rat, interval)
+                h3, h4 = mutiraj(h3, h4, mutation_rate)
 
                 n_pop.append(h3)
                 n_pop.append(h4)
@@ -131,8 +128,8 @@ def function_fit(mut_rat):
         s_iteracija += t
 
         # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
-        if best_ever_f is None or best_ever_f > best_result_fitment:
-            best_ever_f = best_result_fitment
+        if best_ever_fitment is None or best_ever_fitment > best_result_fitment:
+            best_ever_fitment = best_result_fitment
             best_ever_sol = best
         print('Mutacija:', t, best, best_result_fitment, file=outfile)
 
@@ -142,9 +139,54 @@ def function_fit(mut_rat):
     print('Srednji broj iteracija: %.2f' % s_iteracija, file=outfile)
     print('Najbolje resenje: %s' % best_ever_sol, file=outfile)
 
+# Interval funckije
+interval = []
 
-mutacije = [0.05, 0.1, 0.2]
+# Podesavanje algoritma
+populacije = []
+max_iteracija = 0
+broj_pokretanja = 0
+mutation_rate = 0.0
 
-print('Aleksandar Stojanovic RN97/2018')
-for mut_rat in mutacije:
-    function_fit(mut_rat)
+test_vel = 0
+pop_vel = 0
+
+# Output
+outfile = sys.stdout
+
+def init():
+    print('Aleksandar Stojanovic RN97/2018', file=outfile)
+    print('Ucitavam konfiguraciju...', file=outfile)
+    config = configparser.ConfigParser()
+    config.read_file(open(r'config.properties'))
+
+    populacije.append(int(config.get('population', 'size1')))
+    populacije.append(int(config.get('population', 'size2')))
+    populacije.append(int(config.get('population', 'size3')))
+
+    interval.append(int(config.get('population', 'interval_min')))
+    interval.append(int(config.get('population', 'interval_max')))
+
+    mutation_rate = float(config.get('population', 'mutation_rate'))
+    test_vel = int(config.get('population', 'test_vel')) 
+    max_iteracija = int(config.get('general', 'max_iteracija'))
+    broj_pokretanja = int(config.get('general', 'broj_pokretanja'))
+
+    print('Parser: Ucitana velicina populacije: ' + str(populacije), file=outfile)
+    print('Parser: Ucitan interval: ' + str(interval), file=outfile)
+    print('Parser: Ucitana vrednost koef mutacije: ' + str(mutation_rate), file=outfile)
+    print('Parser: Ucitana velicina testa: ' + str(test_vel), file=outfile)
+    print('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), file=outfile)
+    print('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), file=outfile)
+    print(str(interval[0])+str(type(mutation_rate))+str(type(test_vel))+str(type(max_iteracija))+str(type(broj_pokretanja))+str(type(populacije)))
+
+def main():
+    init()
+    for velicina_populacije in populacije:
+        function_fit(velicina_populacije)
+
+
+if __name__ == '__main__':
+    main()
+
+
