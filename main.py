@@ -4,6 +4,13 @@ from decimal import Decimal
 import numpy as np
 import configparser
 
+ # Output
+outfile = sys.stdout
+
+
+best_ever_sol = None
+best_ever_fitment = None
+
 
 # Ocena gena se vrsi tako sto za svaki hromozom(najbolji) gledamo koliko je blizu dosao
 # ocekivanom rezultatu.
@@ -74,7 +81,7 @@ def ukrsti(hromo_1, hromo_2):
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
 
 
-def function_fit(velicina_populacije):
+def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate):
 
     # Podesavanje populacije
     pop_vel = velicina_populacije
@@ -84,24 +91,18 @@ def function_fit(velicina_populacije):
     s_iteracija = 0
 
     
-    best_ever_sol = None
-    best_ever_fitment = None
+    best = None
+    best_result_fitment = None
     
-    
-    print('Algoritam pokrenut, iteracija: ' + ', Populacija: ' + str(velicina_populacije), file=outfile)
+    for k in range(broj_pokretanja):
 
+        print('Algoritam pokrenut, pokretanje: ' + str(k) + ' od ' + str(broj_pokretanja) + ', populacija: ' + str(velicina_populacije) + ', test velicina: ' + str(test_vel), file=outfile)
+        
 
-    # Pokrecemo 2 puta po mutaciji
-    for k in range(2):
-        best = None
-
-        print(str(interval) + str(test_vel) + str(pop_vel))
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval)
                 for i in range(test_vel)] for j in range(pop_vel)]
-        print(pop)
 
-        best_result_fitment = None
         t = 0
         # Ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
         while best_result_fitment != 0 and t < max_iteracija:
@@ -123,15 +124,14 @@ def function_fit(velicina_populacije):
                 print('Najbolji trenutni: ' + str(best))
             t += 1
 
-        # Azuriraj global statistiku
-        s_oceni += best_result_fitment
-        s_iteracija += t
+            # Azuriraj global statistiku
+            s_oceni += best_result_fitment
+            s_iteracija += t
 
         # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
         if best_ever_fitment is None or best_ever_fitment > best_result_fitment:
             best_ever_fitment = best_result_fitment
             best_ever_sol = best
-        print('Mutacija:', t, best, best_result_fitment, file=outfile)
 
     # Na kraju svih izvršavanja izračunavamo srednji broj iteracija
     s_iteracija /= 2
@@ -139,27 +139,31 @@ def function_fit(velicina_populacije):
     print('Srednji broj iteracija: %.2f' % s_iteracija, file=outfile)
     print('Najbolje resenje: %s' % best_ever_sol, file=outfile)
 
-# Interval funckije
-interval = []
-
-# Podesavanje algoritma
-populacije = []
-max_iteracija = 0
-broj_pokretanja = 0
-mutation_rate = 0.0
-
-test_vel = 0
-pop_vel = 0
-
-# Output
-outfile = sys.stdout
 
 def init():
+
+    # Interval funckije
+    interval = []
+
+    # Podesavanje algoritma
+    populacije = []
+    max_iteracija = 500
+    broj_pokretanja = 2
+    mutation_rate = 0.2
+
+    test_vel = 0
+    pop_vel = 0
+
+
     print('Aleksandar Stojanovic RN97/2018', file=outfile)
     print('Ucitavam konfiguraciju...', file=outfile)
     config = configparser.ConfigParser()
-    config.read_file(open(r'config.properties'))
-
+    
+    config_file = input("Unesite ime fajla iz kojeg treba citati parametre, ukoliko zelite default vrednosti upisite (n): ")
+    if config_file == 'n':
+        config.read_file(open(r'config.properties'))
+    else: config.read_file(open(config_file, 'r'))
+    
     populacije.append(int(config.get('population', 'size1')))
     populacije.append(int(config.get('population', 'size2')))
     populacije.append(int(config.get('population', 'size3')))
@@ -180,10 +184,11 @@ def init():
     print('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), file=outfile)
     print(str(interval[0])+str(type(mutation_rate))+str(type(test_vel))+str(type(max_iteracija))+str(type(broj_pokretanja))+str(type(populacije)))
 
+    for velicina_populacije in populacije:
+        function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate)
+
 def main():
     init()
-    for velicina_populacije in populacije:
-        function_fit(velicina_populacije)
 
 
 if __name__ == '__main__':
