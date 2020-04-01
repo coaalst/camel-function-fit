@@ -3,10 +3,11 @@ import sys
 from decimal import Decimal
 import numpy as np
 import configparser
+import pprint
 
  # Output
-outfile = sys.stdout
-
+#outfile = sys.stdout
+outfile = open('output'+'.txt', 'w')
 
 best_ever_sol = None
 best_ever_fitment = None
@@ -96,7 +97,7 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
     
     for k in range(broj_pokretanja):
 
-        print('Algoritam pokrenut, pokretanje: ' + str(k) + ' od ' + str(broj_pokretanja) + ', populacija: ' + str(velicina_populacije) + ', test velicina: ' + str(test_vel), file=outfile)
+        pprint.pprint('Algoritam pokrenut, pokretanje: ' + str(k + 1) + ' od ' + str(broj_pokretanja) + ', populacija: ' + str(velicina_populacije) + ', test velicina: ' + str(test_vel), outfile)
         
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
@@ -121,7 +122,7 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
             if best_result_fitment is None or best_result_fitment > f:
                 best_result_fitment = f
                 best = pop[0]
-                print('Najbolji trenutni: ' + str(best))
+                pprint.pprint('Najbolji trenutni: ' + str(best), outfile)
             t += 1
 
             # Azuriraj global statistiku
@@ -136,8 +137,8 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
     # Na kraju svih izvršavanja izračunavamo srednji broj iteracija
     s_iteracija /= 2
     k = 0
-    print('Srednji broj iteracija: %.2f' % s_iteracija, file=outfile)
-    print('Najbolje resenje: %s' % best_ever_sol, file=outfile)
+    pprint.pprint('Srednji broj iteracija: %.2f' % s_iteracija, outfile)
+    pprint.pprint('Najbolje resenje: %s' % best_ever_sol, outfile)
 
 
 def init():
@@ -155,8 +156,8 @@ def init():
     pop_vel = 0
 
 
-    print('Aleksandar Stojanovic RN97/2018', file=outfile)
-    print('Ucitavam konfiguraciju...', file=outfile)
+    pprint.pprint('Aleksandar Stojanovic RN97/2018', outfile)
+    pprint.pprint('Ucitavam konfiguraciju...', outfile)
     config = configparser.ConfigParser()
     
     config_file = input("Unesite ime fajla iz kojeg treba citati parametre, ukoliko zelite default vrednosti upisite (n): ")
@@ -176,13 +177,12 @@ def init():
     max_iteracija = int(config.get('general', 'max_iteracija'))
     broj_pokretanja = int(config.get('general', 'broj_pokretanja'))
 
-    print('Parser: Ucitana velicina populacije: ' + str(populacije), file=outfile)
-    print('Parser: Ucitan interval: ' + str(interval), file=outfile)
-    print('Parser: Ucitana vrednost koef mutacije: ' + str(mutation_rate), file=outfile)
-    print('Parser: Ucitana velicina testa: ' + str(test_vel), file=outfile)
-    print('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), file=outfile)
-    print('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), file=outfile)
-    print(str(interval[0])+str(type(mutation_rate))+str(type(test_vel))+str(type(max_iteracija))+str(type(broj_pokretanja))+str(type(populacije)))
+    pprint.pprint('Parser: Ucitana velicina populacije: ' + str(populacije), outfile)
+    pprint.pprint('Parser: Ucitan interval: ' + str(interval), outfile)
+    pprint.pprint('Parser: Ucitana vrednost koef mutacije: ' + str(mutation_rate), outfile)
+    pprint.pprint('Parser: Ucitana velicina testa: ' + str(test_vel), outfile)
+    pprint.pprint('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), outfile)
+    pprint.pprint('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), outfile)
 
     for velicina_populacije in populacije:
         function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate)
