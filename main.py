@@ -176,6 +176,7 @@ def init():
     test_vel = int(config.get('population', 'test_vel')) 
     max_iteracija = int(config.get('general', 'max_iteracija'))
     broj_pokretanja = int(config.get('general', 'broj_pokretanja'))
+    outfile = str(config.get('general', 'output'))
 
     pprint.pprint('Parser: Ucitana velicina populacije: ' + str(populacije), outfile)
     pprint.pprint('Parser: Ucitan interval: ' + str(interval), outfile)
@@ -183,6 +184,7 @@ def init():
     pprint.pprint('Parser: Ucitana velicina testa: ' + str(test_vel), outfile)
     pprint.pprint('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), outfile)
     pprint.pprint('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), outfile)
+    pprint.pprint('Parser: Ucitana putanja za output: ' + str(outfile), outfile)
 
     for velicina_populacije in populacije:
         function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate)

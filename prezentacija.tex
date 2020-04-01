@@ -27,18 +27,19 @@ Za rešavanja datog problema sam se odlučio za python programski jezik zbog lag
   \item random
   \item sys
   \item decimal
-  \item numpy 
+  \item numpy
+  \item pprint
   \item configparser - parsiranje fajlova
 \end{itemize}
 
 Instaliranje ovih biblioteka vrši se tako sto iz istog foldera pozovemo sledeću komandu: $pip$ $install$ $-r$ $requirements.txt$ \\
-Za pokretanje programa neophodno je sve fajlove staviti u isti folder. U $config.properties$ fajlu se nalaze default vrednosti koje ce algoritam koristiti ukoliko korisnik ne unese svoj fajl. Nakon sto algoritam završi sa radom u folderu će biti kreiran fajl koji sadrži rezultate pokretanja
+Za pokretanje programa neophodno je sve fajlove staviti u isti folder. U $config.properties$ fajlu se nalaze default vrednosti koje ce algoritam koristiti ukoliko korisnik ne unese svoj fajl. Nakon sto algoritam završi sa radom u folderu će biti kreiran fajl koji sadrži rezultate pokretanja sa nazivom $output.txt$.
 
 \section{Algoritma}
 
 Korišćen je kontinualan genetski algoritam. Ovaj algoritam sadrži sledeće komponente: Funkcija prilagodjenosti, funkcija ukrštanja i funkcija mutacije. One će biti objasnjene kasnije u posebnim sekcijama, za sada ću se fokusirati na parametre.\\
 
-U folderu se nalazi $config.properties$ fajl koji sadrzi polja za konfiguraciju algoritma. Pri pokretanju programa, od korisnika ce biti zatraženo da unese putanju do fajla za konfiguraciju.Ukoliko korisnik ne unese fajl, program će ucitati vrednosti iz ovog fajla. \\
+U folderu se nalazi $config.properties$ fajl koji sadrzi polja za konfiguraciju algoritma. Pri pokretanju programa, od korisnika ce biti zatraženo da unese putanju do fajla za konfiguraciju. Ukoliko korisnik ne unese fajl, program će ucitati vrednosti iz ovog fajla. \\
 
 Ako pogledamo sastav fajla možemo primetiti dva poglavlja. Poglavlje $population$ odnosi se na konfiguraciju se populacije i ovde se može podesiti:
 
