@@ -5,7 +5,7 @@ import numpy as np
 import configparser
 import pprint
 
- # Output
+# Output
 #outfile = sys.stdout
 outfile = open('output'+'.txt', 'w')
 
@@ -34,7 +34,7 @@ def oceni(hromozom):
 def mutiraj(hromo_1, hromo_2, mutation_rate):
     if(random.gauss(0,1) < mutation_rate):
         l = []
-        rand = round(random.gauss(0, 1), 2)
+        rand = round(random.gauss(-1, 1), 2)
         i = random.randint(0, 1)
         hromo_1[i] = float(hromo_1[i]) + rand
         hromo_2[i] = float(hromo_2[i]) + rand
@@ -80,17 +80,13 @@ def ukrsti(hromo_1, hromo_2):
     return l
 
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
-
-
 def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate):
 
     # Podesavanje populacije
     pop_vel = velicina_populacije
     npop_vel = velicina_populacije
 
-    s_oceni = 0
-    s_iteracija = 0
-
+    prilagodjenost = []
     
     best = None
     best_result_fitment = None
@@ -98,13 +94,13 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
     for k in range(broj_pokretanja):
 
         pprint.pprint('Algoritam pokrenut, pokretanje: ' + str(k + 1) + ' od ' + str(broj_pokretanja) + ', populacija: ' + str(velicina_populacije) + ', test velicina: ' + str(test_vel), outfile)
-        
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval)
                 for i in range(test_vel)] for j in range(pop_vel)]
 
         t = 0
+
         # Ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
         while best_result_fitment != 0 and t < max_iteracija:
             n_pop = pop[:]
@@ -118,27 +114,33 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
                 n_pop.append(h4)
 
             pop = sorted(n_pop, key=lambda x: oceni(x))[:pop_vel]
+
+            # Dodavanje prilagodjenosti u niz
+            for ent in pop:
+                prilagodjenost.append(oceni(ent))
+
             f = oceni(pop[0])
             if best_result_fitment is None or best_result_fitment > f:
                 best_result_fitment = f
                 best = pop[0]
-                pprint.pprint('Najbolji trenutni: ' + str(best), outfile)
-            t += 1
-
-            # Azuriraj global statistiku
-            s_oceni += best_result_fitment
-            s_iteracija += t
+                # pprint.pprint('Najbolji trenutni: ' + str(best), outfile)
+            t += 1 
 
         # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
         if best_ever_fitment is None or best_ever_fitment > best_result_fitment:
             best_ever_fitment = best_result_fitment
             best_ever_sol = best
+            pprint.pprint('Najbolji trenutni: ' + str(best), sys.stdout)
 
-    # Na kraju svih izvršavanja izračunavamo srednji broj iteracija
-    s_iteracija /= 2
-    k = 0
-    pprint.pprint('Srednji broj iteracija: %.2f' % s_iteracija, outfile)
-    pprint.pprint('Najbolje resenje: %s' % best_ever_sol, outfile)
+        prosecna_prilagodjenost = 0
+        for prilag in prilagodjenost:
+            prosecna_prilagodjenost += prilag
+        
+        prosecna_prilagodjenost /= len(prilagodjenost)
+        k = 0
+        pprint.pprint('Najbolji trenutni fitness: ' + str(oceni(best)), outfile)
+        pprint.pprint('Najbolji trenutni: ' + str(best), outfile)
+        pprint.pprint('Prosecna prilagodjenost: ' + str(prosecna_prilagodjenost), outfile)
 
 
 def init():
@@ -156,8 +158,8 @@ def init():
     pop_vel = 0
 
 
-    pprint.pprint('Aleksandar Stojanovic RN97/2018', outfile)
-    pprint.pprint('Ucitavam konfiguraciju...', outfile)
+    pprint.pprint('Aleksandar Stojanovic RN97/2018', sys.stdout)
+    pprint.pprint('Ucitavam konfiguraciju...', sys.stdout)
     config = configparser.ConfigParser()
     
     config_file = input("Unesite ime fajla iz kojeg treba citati parametre, ukoliko zelite default vrednosti upisite (n): ")
@@ -178,13 +180,13 @@ def init():
     broj_pokretanja = int(config.get('general', 'broj_pokretanja'))
     outfile = str(config.get('general', 'output'))
 
-    pprint.pprint('Parser: Ucitana velicina populacije: ' + str(populacije), outfile)
-    pprint.pprint('Parser: Ucitan interval: ' + str(interval), outfile)
-    pprint.pprint('Parser: Ucitana vrednost koef mutacije: ' + str(mutation_rate), outfile)
-    pprint.pprint('Parser: Ucitana velicina testa: ' + str(test_vel), outfile)
-    pprint.pprint('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), outfile)
-    pprint.pprint('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), outfile)
-    pprint.pprint('Parser: Ucitana putanja za output: ' + str(outfile), outfile)
+    pprint.pprint('Parser: Ucitana velicina populacije: ' + str(populacije), sys.stdout)
+    pprint.pprint('Parser: Ucitan interval: ' + str(interval), sys.stdout)
+    pprint.pprint('Parser: Ucitana vrednost koef mutacije: ' + str(mutation_rate), sys.stdout)
+    pprint.pprint('Parser: Ucitana velicina testa: ' + str(test_vel), sys.stdout)
+    pprint.pprint('Parser: Ucitan broj maks iteracija: ' + str(max_iteracija), sys.stdout)
+    pprint.pprint('Parser: Ucitan broj pokretanja: ' + str(broj_pokretanja), sys.stdout)
+    pprint.pprint('Parser: Ucitana putanja za output: ' + str(outfile), sys.stdout)
 
     for velicina_populacije in populacije:
         function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate)
