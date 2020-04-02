@@ -53,6 +53,11 @@ Ako pogledamo sastav fajla možemo primetiti dva poglavlja. Poglavlje $populatio
  
 Pogravlje $general$ sadrži polja za konfiguraciju maksimalnog broja iteracija, lokaciju output fajla i broj ponavljanja po velicini populacije.
 
+\section{Metoda prilagodjenosti}
+
+Funkcija prilagodjenisti predstavlja način za rangiranje populacije uz pomoc fitness-a. Budući da mi radimo minimizaciju visedimenzionalne funkcije možemo nju koristiti kao funkciju troška. Ovo u prevodu znaci da konkretno u našem slučaju hromozomi imaju u sebi dva gena $[x,y]$ koje ubacujemo u funkciju. Njihov fitnes je zapravo vrednost funkcije za parametre koje smo prosledili.\\
+
+Nama je poznat interval za koji funkcija radi i znamo da se očekivana nula nalazi u $f(0,0)=0$. Sa ovim možemo rangirati jedinke tako što ćemo na osnovu fitnesa sortirati populaciju u rastućem poretku. Jedinke koje su bliže nuli će imati najveći fitnes.
 
 \section{Metoda ukrštanja - Redklif ukrštanje}
 
@@ -63,7 +68,7 @@ U ovoj formuli $\rho_{pot}$ predstavlja parametar poromka, $\rho_{1}$ i $\rho_{2
 
 \section{Metoda mutacije - Tačkasta normalna mutacija}
 
-Jednostavna metoda kod koje se na gen iy normalne raspodele dodaje slucajna vrednost. Bilo bi lepo definisati optimalan interval iz kojeg cemo birati istu radi bržeg konvergiranja ka cilju ali ja sam se odlučio za vrednosti izmedju 0 i 1.
+Jednostavna metoda kod koje se na gen iz normalne raspodele dodaje slucajna vrednost. Bilo bi lepo definisati optimalan interval iz kojeg cemo birati istu radi bržeg konvergiranja ka cilju ali ja sam se odlučio za vrednosti izmedju 0 i 1.
 
 \chapter{Izvršavanje}
 
