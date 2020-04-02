@@ -93,7 +93,7 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
     
     for k in range(broj_pokretanja):
 
-        pprint.pprint('Algoritam pokrenut, pokretanje: ' + str(k + 1) + ' od ' + str(broj_pokretanja) + ', populacija: ' + str(velicina_populacije) + ', test velicina: ' + str(test_vel), outfile)
+        pprint.pprint('Algoritam pokrenut| pokretanje: ' + str(k + 1) + ' od ' + str(broj_pokretanja) + '| populacija: ' + str(velicina_populacije) + '| test velicina: ' + str(test_vel) + "|", outfile)
 
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval)
