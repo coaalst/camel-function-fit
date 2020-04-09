@@ -4,6 +4,7 @@ from decimal import Decimal
 import numpy as np
 import configparser
 import pprint
+from matplotlib import pyplot as plt
 
 # Output
 #outfile = sys.stdout
@@ -80,14 +81,14 @@ def ukrsti(hromo_1, hromo_2):
     return l
 
 # Glavna funckija koja kao argument uzima svaki rejt mutacije iz niza
-def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate):
+def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate, prikazi_graf, save_graf):
 
     # Podesavanje populacije
     pop_vel = velicina_populacije
     npop_vel = velicina_populacije
 
     prilagodjenost = []
-    
+
     best = None
     best_result_fitment = None
     
@@ -99,10 +100,14 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
         pop = [[random.uniform(*interval)
                 for i in range(test_vel)] for j in range(pop_vel)]
 
-        t = 0
+        i = 0
+        t = []
+        najbolje_po_gen = []
+        prilagodjenost_po_gen = []
+        prosek_prilagodjenosti_po_gen = []
 
         # Ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
-        while best_result_fitment != 0 and t < max_iteracija:
+        while best_result_fitment != 0 and len(t) != max_iteracija:
             n_pop = pop[:]
             while len(n_pop) < pop_vel + npop_vel:
                 h1 = turnir(oceni, pop, 3)
@@ -118,19 +123,53 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
             # Dodavanje prilagodjenosti u niz
             for ent in pop:
                 prilagodjenost.append(oceni(ent))
+                prilagodjenost_po_gen.append(oceni(ent))
+            
+            prosek = 0
+            for l in prilagodjenost_po_gen:
+                prosek += l
+            prosek_prilagodjenosti_po_gen.append(prosek/len(prilagodjenost_po_gen))
+            prilagodjenost_po_gen = []
 
+            # Uzn=mi najboljenje ocenjeni i smesti ga u niz za grafik
             f = oceni(pop[0])
+            najbolje_po_gen.append(f)
+
+            # Azuriranje top rezultata
             if best_result_fitment is None or best_result_fitment > f:
                 best_result_fitment = f
                 best = pop[0]
                 # pprint.pprint('Najbolji trenutni: ' + str(best), outfile)
-            t += 1 
+            
+            # Append generacije
+            t.append(i)
+            i += 1
+        
+        # Grafik
+        fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2)
+
+        # Figure 1
+        ax1.plot(t, najbolje_po_gen, color = '#444444')
+        ax1.set_xlabel('Generacija')
+        ax1.set_ylabel('Najbolji iz generacije')
+        
+        # Figure 2
+        ax2.plot(t, prosek_prilagodjenosti_po_gen)
+        ax2.set_xlabel('Generacija')
+        ax2.set_ylabel('Prosek prilagodjenosti iz generacije')
+        
+        if prikazi_graf is True:
+            plt.show()
+
+        if save_graf is True: 
+            plt.savefig('grafik' + str(best) + '.png', format='png', dpi=500, )
+
 
         # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
         if best_ever_fitment is None or best_ever_fitment > best_result_fitment:
             best_ever_fitment = best_result_fitment
             best_ever_sol = best
-            pprint.pprint('Najbolji trenutni: ' + str(best), sys.stdout)
+            pprint.pprint('Najbolji trenutni: ' + str(f), sys.stdout)
 
         prosecna_prilagodjenost = 0
         for prilag in prilagodjenost:
@@ -179,6 +218,8 @@ def init():
     max_iteracija = int(config.get('general', 'max_iteracija'))
     broj_pokretanja = int(config.get('general', 'broj_pokretanja'))
     outfile = str(config.get('general', 'output'))
+    prikazi_graf = bool(config.get('general', 'prikazi_graf'))
+    save_graf = bool(config.get('general', 'save_graf'))
 
     pprint.pprint('Parser: Ucitana velicina populacije: ' + str(populacije), sys.stdout)
     pprint.pprint('Parser: Ucitan interval: ' + str(interval), sys.stdout)
@@ -189,7 +230,7 @@ def init():
     pprint.pprint('Parser: Ucitana putanja za output: ' + str(outfile), sys.stdout)
 
     for velicina_populacije in populacije:
-        function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate)
+        function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, best_ever_fitment, interval, max_iteracija, mutation_rate, prikazi_graf, save_graf)
 
 def main():
     init()

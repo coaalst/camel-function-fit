@@ -1,1 +1,1 @@
-test_vel = 0
+label = 'Najbolji po gen'
