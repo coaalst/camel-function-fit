@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage[english]{babel}
 
-\title{\Huge \textbf{Genetski algoritmi} \\ \huge Minimizacija funkcije Trogrba kamila}
+\title{\Huge \textbf{Genetski algoritmi} \\ \huge Minimizacija funkcije Trogrba kamila \\ }
 \author{\textsc{Aleksandar Stojanovic RN97/2018}}
 
 
@@ -33,11 +33,27 @@ Za rešavanja datog problema sam se odlučio za python programski jezik zbog lag
 \end{itemize}
 
 Instaliranje ovih biblioteka vrši se tako sto iz istog foldera pozovemo sledeću komandu: $pip$ $install$ $-r$ $requirements.txt$ \\
-Za pokretanje programa neophodno je sve fajlove staviti u isti folder. U $config.properties$ fajlu se nalaze default vrednosti koje ce algoritam koristiti ukoliko korisnik ne unese svoj fajl. Nakon sto algoritam završi sa radom u folderu će biti kreiran fajl koji sadrži rezultate pokretanja sa nazivom $output.txt$.
+Za pokretanje programa neophodno je sve fajlove staviti u isti folder.\\
+
+Struktura fajlova je sledeća:
+\begin{itemize}
+  \item config.properties
+  \item output.txt
+  \item main.py
+\end{itemize}
+
+U $config.properties$ fajlu se nalaze default vrednosti koje ce algoritam koristiti ukoliko korisnik ne unese svoj fajl. Nakon sto algoritam završi sa radom u folderu će biti kreiran fajl koji sadrži rezultate pokretanja sa nazivom $output.txt$.
 
 \section{Algoritma}
+Korišćen je kontinualan genetski algoritam. Ovaj algoritam sadrži sledeće komponente:
 
-Korišćen je kontinualan genetski algoritam. Ovaj algoritam sadrži sledeće komponente: Funkcija prilagodjenosti, funkcija ukrštanja i funkcija mutacije. One će biti objasnjene kasnije u posebnim sekcijama, za sada ću se fokusirati na parametre.\\
+\begin{itemize}
+  \item Funkcija prilagodjenosti,
+  \item funkcija ukrštanja i
+  \item funkcija mutacije. 
+\end{itemize}
+
+One će biti objasnjene kasnije u posebnim sekcijama, za sada ću se fokusirati na parametre.\\
 
 U folderu se nalazi $config.properties$ fajl koji sadrzi polja za konfiguraciju algoritma. Pri pokretanju programa, od korisnika ce biti zatraženo da unese putanju do fajla za konfiguraciju. Ukoliko korisnik ne unese fajl, program će ucitati vrednosti iz ovog fajla. \\
 
