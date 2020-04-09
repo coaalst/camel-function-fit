@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.3.4)  9 APR 2020 15:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7300 64-bit) (preloaded format=pdflatex 2020.3.4)  9 APR 2020 19:12
 entering extended mode
 **c:/Users/Coa/Desktop/faks/skreipt/ispit/camel-function-fit/prezentacija.tex
 (c:/Users/Coa/Desktop/faks/skreipt/ispit/camel-function-fit/prezentacija.tex
@@ -317,46 +317,83 @@ Underfull \hbox (badness 10000) in paragraph at lines 59--60
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--76
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
 
  []
 
 [2]
-Overfull \hbox (3.79926pt too wide) in paragraph at lines 86--86
+Overfull \hbox (3.79926pt too wide) in paragraph at lines 93--93
 []\T1/lmr/bx/n/14.4 Metoda mu-tacije - Ta£kasta nor-malna mu-tacija 
  []
 
 
 Package hyperref Warning: Composite letter `\textasciicaron+c'
 (hyperref)                not defined in PD1 encoding,
-(hyperref)                removing `\textasciicaron' on input line 86.
+(hyperref)                removing `\textasciicaron' on input line 93.
 
 [3] [4
 
 ]
 Chapter 2.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 92.
-[5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 92.
+<grafik20-0.png, id=72, 462.528pt x 346.896pt>
+File: grafik20-0.png Graphic file (type png)
+<use grafik20-0.png>
+Package pdftex.def Info: grafik20-0.png  used on input line 101.
+(pdftex.def)             Requested size: 462.52686pt x 346.89514pt.
+
+Overfull \hbox (102.52686pt too wide) in paragraph at lines 101--102
+[] 
+ []
+
+<grafik100-0.png, id=74, 462.528pt x 346.896pt>
+File: grafik100-0.png Graphic file (type png)
+<use grafik100-0.png>
+Package pdftex.def Info: grafik100-0.png  used on input line 103.
+(pdftex.def)             Requested size: 462.52686pt x 346.89514pt.
+
+Overfull \hbox (119.52686pt too wide) in paragraph at lines 103--104
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5 <c:/Users/Coa/Desktop/faks/skreipt/ispit/camel-function-fit/grafik20-0.png>]
+<grafik150-0.png, id=81, 462.528pt x 346.896pt>
+File: grafik150-0.png Graphic file (type png)
+<use grafik150-0.png>
+Package pdftex.def Info: grafik150-0.png  used on input line 105.
+(pdftex.def)             Requested size: 462.52686pt x 346.89514pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 106.
+
+Overfull \hbox (119.52686pt too wide) in paragraph at lines 105--106
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6 <c:/Users/Coa/Desktop/faks/skreipt/ispit/camel-function-fit/grafik100-0.png>] [7 <c:/Users/Coa/Desktop/faks/skreipt/ispit/camel-function-fit/grafik150-0.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 106.
  (c:\Users\Coa\Desktop\faks\skreipt\ispit\camel-function-fit\prezentacija.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 92.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 92.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 106.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 106.
 Package rerunfilecheck Info: File `prezentacija.out' has not changed.
-(rerunfilecheck)             Checksum: F9043829BE93B3A2DA723AD6DF6BE4B2;474.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 92.
+(rerunfilecheck)             Checksum: 8764CA902F130C2504067CCD8D3E3387;526.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 106.
  ) 
 Here is how much of TeX's memory you used:
- 6181 strings out of 481311
- 97684 string characters out of 2909060
- 360412 words of memory out of 3000000
- 21532 multiletter control sequences out of 15000+200000
+ 6204 strings out of 481311
+ 98045 string characters out of 2909060
+ 360415 words of memory out of 3000000
+ 21548 multiletter control sequences out of 15000+200000
  581249 words of font info for 51 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  34i,6n,31p,634b,381s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ts1.enc}<C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmcsc10.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi10.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr10.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr17.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmro10.pfb><C:/Users/Coa/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb>
-Output written on c:\Users\Coa\Desktop\faks\skreipt\ispit\camel-function-fit\prezentacija.pdf (7 pages, 212598 bytes).
+Output written on c:\Users\Coa\Desktop\faks\skreipt\ispit\camel-function-fit\prezentacija.pdf (9 pages, 748209 bytes).
 PDF statistics:
- 118 PDF objects out of 1000 (max. 8388607)
- 15 named destinations out of 1000 (max. 500000)
- 57 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 137 PDF objects out of 1000 (max. 8388607)
+ 18 named destinations out of 1000 (max. 500000)
+ 80 words of extra memory for PDF output out of 10000 (max. 10000000)
 

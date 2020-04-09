@@ -95,11 +95,11 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
     for k in range(broj_pokretanja):
 
         pprint.pprint('Algoritam pokrenut| pokretanje: ' + str(k + 1) + ' od ' + str(broj_pokretanja) + '| populacija: ' + str(velicina_populacije) + '| test velicina: ' + str(test_vel) + "|", outfile)
-
         # Generisanje populacije pomoću zadatog intervala realnih vrednosti
         pop = [[random.uniform(*interval)
                 for i in range(test_vel)] for j in range(pop_vel)]
 
+        # Promenljive za crtanje grafika
         i = 0
         t = []
         najbolje_po_gen = []
@@ -108,6 +108,7 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
 
         # Ponavljamo dok ne postignemo maksimum iteracija ili dok trošak ne postane 0
         while best_result_fitment != 0 and len(t) != max_iteracija:
+        
             n_pop = pop[:]
             while len(n_pop) < pop_vel + npop_vel:
                 h1 = turnir(oceni, pop, 3)
@@ -143,6 +144,8 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
             
             # Append generacije
             t.append(i)
+            if best_result_fitment >= -0.01 and best_result_fitment <= 0.01:
+                break
             i += 1
         
         # Grafik
@@ -158,12 +161,11 @@ def function_fit(velicina_populacije, test_vel, broj_pokretanja, best_ever_sol, 
         ax2.set_xlabel('Generacija')
         ax2.set_ylabel('Prosek prilagodjenosti iz generacije')
         
+        if save_graf is True: 
+            plt.savefig('grafik' + str(velicina_populacije) + '-' + str(k + 1) + '.png', format='png', dpi=500, )
+        
         if prikazi_graf is True:
             plt.show()
-
-        if save_graf is True: 
-            plt.savefig('grafik' + str(best) + '.png', format='png', dpi=500, )
-
 
         # Ako smo našli bolji od prethodnog, ažuriramo najbolje rešenje
         if best_ever_fitment is None or best_ever_fitment > best_result_fitment:
